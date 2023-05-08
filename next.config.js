@@ -4,11 +4,6 @@ const nextConfig = {
   images: {
     domains: ["res.cloudinary.com"],
   },
-};
-
-module.exports = nextConfig;
-
-module.exports = {
   async headers() {
     return [
       {
@@ -23,4 +18,20 @@ module.exports = {
       }
     ]
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 };
+
+module.exports = nextConfig;
+
