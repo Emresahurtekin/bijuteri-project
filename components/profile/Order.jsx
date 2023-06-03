@@ -1,95 +1,124 @@
-import { useEffect, useState } from "react";
-import Title from "../ui/Title";
-import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Title from "../../components/ui/Title";
+import { useSelector, useDispatch } from "react-redux";
+import { reset } from "../../redux/cartSlice";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
-const Order = () => {
-  const [orders, setOrders] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
-
+const Cart = ({ userList }) => {
   const { data: session } = useSession();
-  useEffect(() => {
-    const getOrders = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/orders`
-        );
-        setOrders(
-          res.data.filter((order) => order.customer === currentUser?.fullName)
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getOrders();
-  }, [currentUser]);
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const user = userList?.find((user) => user.email === session?.user?.email);
+  const router = useRouter();
 
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
-        setCurrentUser(
-          res.data.filter((user) => user.email === session.user.email)[0]
-        );
-      } catch (err) {
-        console.log(err);
+  const newOrder = {
+    customer: user?.fullName,
+    address: user?.address ? user?.address : "No address",
+    total: cart.total,
+    method: 0,
+  };
+
+  const createOrder = async () => {
+    try {
+      if (session) {
+        if (confirm("Are you sure to order?")) {
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/orders`,
+            newOrder
+          );
+          if (res.status === 201) {
+            router.push(`/order/${res.data._id}`);
+            dispatch(reset());
+            toast.success("Order created successfully", {
+              autoClose: 1000,
+            });
+          }
+        }
+      } else {
+        toast.error("Please login first.", {
+          autoClose: 1000,
+        });
       }
-    };
-    getUsers();
-  }, [session]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <div className="lg:p-8 flex-1 lg:mt-0 mt-5">
-      <Title addClass="text-[40px]">Şifre</Title>
-      <div className="overflow-x-auto w-full mt-5">
-      <table className="w-full text-sm text-center text-gray-500 xl:min-w-[1000px] min-w-100%">
-          <thead className="text-xs text-gray-400 uppercase bg-gray-700">
-            <tr>
-              <th scope="col" className="py-3 px-6">
-                ID
-              </th>
-              <th scope="col" className="py-3 px-6">
-                ADRES
-              </th>
-              <th scope="col" className="py-3 px-6">
-                GÜN
-              </th>
-              <th scope="col" className="py-3 px-6">
-                TOPLAM
-              </th>
-              <th scope="col" className="py-3 px-6">
-                DURUM
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-          {orders.map((order) => (
-              <tr
-                className="transition-all bg-secondary border-gray-700 hover:bg-primary"
-                key={order?._id}
-              >
-                <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
-                  <span>63107...</span>
-                </td>
-                <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  Adana
-                </td>
-                <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  01-09-2022
-                </td>
-                <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  18₺
-                </td>
-                <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                  Hazırlanıyor
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="min-h-[calc(100vh_-_433px)]">
+      <div className="flex justify-between items-center md:flex-row flex-col">
+        <div className="md:min-h-[calc(100vh_-_433px)] flex items-center flex-1 p-10 overflow-x-auto w-full">
+          <div className="max-h-52 overflow-auto w-full">
+            {cart?.products?.length > 0 ? (
+              <table className="w-full text-sm text-center text-gray-500 min-w-[1000px]">
+                <thead className="text-xs text-gray-400 uppercase bg-gray-700">
+                  <tr>
+                    <th scope="col" className="py-3 px-6">
+                      PRODUCT
+                    </th>
+                    <th scope="col" className="py-3 px-6">
+                      EXTRAS
+                    </th>
+                    <th scope="col" className="py-3 px-6">
+                      PRICE
+                    </th>
+                    <th scope="col" className="py-3 px-6">
+                      QUANTITY
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cart.products.map((product, index) => (
+                    <tr
+                      className="transition-all bg-secondary border-gray-700 hover:bg-primary"
+                      key={index}
+                    >
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
+                        <Image
+                          src={product?.img}
+                          alt=""
+                          width={50}
+                          height={50}
+                        />
+                        <span>{product.name}</span>
+                      </td>
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                        {product.extras?.length > 0
+                          ? product.extras.map((item) => (
+                              <span key={item.id}>{item.text}, </span>
+                            ))
+                          : "empty"}
+                      </td>
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                        ${product.price}
+                      </td>
+                      <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                        {product.quantity}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="text-center font-semibold">Hiç Ürün Yok..</p>
+            )}
+          </div>
+        </div>
+        </div>
       </div>
-    </div>
   );
 };
 
-export default Order;
+export const getServerSideProps = async () => {
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+
+  return {
+    props: {
+      userList: res.data ? res.data : [],
+    },
+  };
+};
+export default Cart;
