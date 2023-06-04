@@ -20,12 +20,7 @@ const MenuWrapper = ({ categoryList, productList }) => {
       <div className="flex flex-col items-center w-full">
         <Title addClass="text-[40px]">Ürünlerimiz</Title>
         <div className="mt-10 grid grid-cols-5 gap-4"> 
-        <button inset-y-0 left-0 class="text-white bg-secondary hover:bg-secondary  rounded-3xl font-mediumss text-sm px-5 py-2.5 text-center inline-flex items-center mr-2">KADIN</button>
-        <button inset-y-0 left-0 class="text-white bg-secondary hover:bg-secondary  rounded-3xl font-mediumss text-sm px-5 py-2.5 text-center inline-flex items-center mr-2">ERKEK</button>
-        <button inset-y-0 left-0 class="text-white bg-secondary hover:bg-secondary  rounded-3xl font-mediumss text-sm px-5 py-2.5 text-center inline-flex items-center mr-2">ÇOCUK</button>
-        <button inset-y-0 left-0 class="text-white bg-secondary hover:bg-secondary  rounded-3xl font-mediumss text-sm px-5 py-2.5 text-center inline-flex items-center mr-2">KOZMETİK</button>
-        <button inset-y-0 left-0 class="text-white bg-secondary hover:bg-secondary  rounded-3xl font-mediumss text-sm px-5 py-2.5 text-center inline-flex items-center mr-2">HEDİYE</button>
-        {categoryList && 
+          {categoryList && 
             categoryList.map((category, index) => (
               <button 
                 className={`px-6 py-2  rounded-3xl ${
