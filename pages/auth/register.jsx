@@ -16,7 +16,7 @@ const Register = () => {
         values
       );
       if (res.status === 200) {
-        toast.success("User created successfully");
+        toast.success("Kullanıcı başarıyla oluşturuldu");
         push("/auth/login");
       }
     } catch (err) {
@@ -41,7 +41,7 @@ const Register = () => {
       id: 1,
       name: "fullName",
       type: "text",
-      placeholder: "Your Full Name",
+      placeholder: "isim soyisim",
       value: values.fullName,
       errorMessage: errors.fullName,
       touched: touched.fullName,
@@ -50,7 +50,7 @@ const Register = () => {
       id: 2,
       name: "email",
       type: "email",
-      placeholder: "E Posta Adresiniz",
+      placeholder: "Email Adresi",
       value: values.email,
       errorMessage: errors.email,
       touched: touched.email,
@@ -59,7 +59,7 @@ const Register = () => {
       id: 3,
       name: "password",
       type: "password",
-      placeholder: "Şifre",
+      placeholder: "şifre",
       value: values.password,
       errorMessage: errors.password,
       touched: touched.password,
@@ -68,21 +68,21 @@ const Register = () => {
       id: 4,
       name: "confirmPassword",
       type: "password",
-      placeholder: "Tekrar Şifre",
+      placeholder: "şifreyi tekrar girin",
       value: values.confirmPassword,
       errorMessage: errors.confirmPassword,
       touched: touched.confirmPassword,
     },
   ];
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto py-3 ">
       <form
         className="flex flex-col items-center my-20 md:w-1/2 w-full mx-auto"
         onSubmit={handleSubmit}
       >
-        <Title addClass="text-[40px] mb-6">Kayıt Ol</Title>
+        <Title addClass="text-[40px] mb-6">Kayıt ol</Title>
         <div className="flex flex-col gap-y-3 w-full">
-        {inputs.map((input) => (
+          {inputs.map((input) => (
             <Input
               key={input.id}
               {...input}
@@ -92,17 +92,17 @@ const Register = () => {
           ))}
         </div>
         <div className="flex flex-col w-full gap-y-3 mt-6">
-          <button className="btn-primary" >
-            Kayıt Ol
+        <button className="btn-primary" >
+            Kayıt ol
           </button>
           <Link href="/auth/login">
             <span className="text-sm underline cursor-pointer text-secondary">
-              Hesabın Yok mu?
+              Hesabın yok mu?
             </span>
           </Link>
         </div>
       </form>
-      </div>
+    </div>
   );
 };
 export default Register;
