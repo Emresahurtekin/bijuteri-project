@@ -13,7 +13,7 @@ const Profile = ({ user }) => {
   const { push } = useRouter();
 
   const handleSignOut = () => {
-    if (confirm("Are you sure you want to sign out?")) {
+    if (confirm("Çıkış yapmak istediğinizden emin misiniz?")) {
       signOut({ redirect: false });
       push("/auth/login");
     }
