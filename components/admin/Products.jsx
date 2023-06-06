@@ -9,7 +9,7 @@ const Products = () => {
 
   const handleDelete = async (id) => {
     try {
-      if (confirm("Are you sure you want to delete this product?")) {
+      if (confirm("Bu ürünü silmek istediğinizden emin misiniz?")) {
         const res = await axios.delete(
           `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`
         );
