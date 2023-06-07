@@ -39,7 +39,7 @@ const Cart = ({ userList }) => {
           }
         }
       } else {
-        toast.error("Lütfen Önce Giriş Yapınız.", {
+        toast.error("Lütfen Önce Giriş Yapın.", {
           autoClose: 1000,
         });
       }
