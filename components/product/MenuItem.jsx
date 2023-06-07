@@ -13,7 +13,7 @@ const MenuItem = ({ product }) => {
     dispatch(
       addProduct({
         ...product,
-        extras: [{ text: "Boş" }],
+        extras: [{ text: "empty" }],
         price: product.prices[0],
         quantity: 1,
       })
